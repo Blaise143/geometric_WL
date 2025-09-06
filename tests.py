@@ -1,5 +1,5 @@
 import unittest
-from src.utils import node_coloring
+from utils import node_coloring
 
 class TestNodeColoring(unittest.TestCase):
     def test_same_dict_different_order(self):
