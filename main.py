@@ -1,5 +1,13 @@
-from utils import *
+from utils import (
+    init_base_colors,
+    init_hop_sets,
+    update_colors_once,
+    expand_hop_sets_once,
+)
+import torch
+
 from collections import Counter
+from typing import List
 
 
 class GeometricGraph:
@@ -17,12 +25,12 @@ class GeometricGraph:
     def neighbors(self, i):
         return self.N[i]
 
+
 def gwl(
     G,
     num_iters: int = 2,
     igwl: bool = False,
 ) -> List[str]:
-
     """
     Does 2 itirations of the gwl test.
     TODO: gonna have to add a better stop criterion than max_iter. This will work for my simple example though.
@@ -41,18 +49,17 @@ def gwl(
         )
     return colors
 
+
 if __name__ == "__main__":
-    edges = [(0,1),(1,2),(2,3)]
+    edges = [(0, 1), (1, 2), (2, 3)]
 
-    XA = torch.tensor([[-1.,  1.],
-                       [ 0.,  0.],
-                       [ 1.,  0.],
-                       [ 2.,  1.]], dtype=torch.float32)
+    XA = torch.tensor(
+        [[-1.0, 1.0], [0.0, 0.0], [1.0, 0.0], [2.0, 1.0]], dtype=torch.float32
+    )
 
-    XB = torch.tensor([[-1.,  1.],
-                       [ 0.,  0.],
-                       [ 1.,  0.],
-                       [ 2., -1.]], dtype=torch.float32)
+    XB = torch.tensor(
+        [[-1.0, 1.0], [0.0, 0.0], [1.0, 0.0], [2.0, -1.0]], dtype=torch.float32
+    )
 
     GA = GeometricGraph(XA, edges)
     GB = GeometricGraph(XB, edges)
@@ -63,7 +70,7 @@ if __name__ == "__main__":
     igwl_is_isometric = Counter(colsA_igwl) == Counter(colsB_igwl)
     print("IGWL: Isometric Graphs?", igwl_is_isometric)
     print("IGWL test failed") if igwl_is_isometric else print("IGWL test passed")
-    print("__"*10)
+    print("__" * 10)
     colsA_gwl2 = gwl(GA, num_iters=2, igwl=False)
     colsB_gwl2 = gwl(GB, num_iters=2, igwl=False)
     gwl_is_isometric = Counter(colsA_gwl2) == Counter(colsB_gwl2)
