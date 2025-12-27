@@ -1,6 +1,8 @@
 import torch
-import hashlib, json
+import hashlib
+import json
 from typing import List, Set, Tuple
+
 
 def node_coloring(obj) -> str:
     """
@@ -10,8 +12,10 @@ def node_coloring(obj) -> str:
     s = json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
     return hashlib.sha1(s.encode("utf-8")).hexdigest()
 
+
 def normalize(v: torch.Tensor, eps: float = 1e-12):
     return v / (v.norm(dim=-1, keepdim=True) + eps)
+
 
 def get_invariants(rel_vecs: torch.Tensor):
     """
@@ -32,11 +36,13 @@ def get_invariants(rel_vecs: torch.Tensor):
 
     return {"D": D, "A": A}
 
+
 def init_base_colors(G) -> List[str]:
     """
     First iteration, initialization of the hashes
     """
     return [node_coloring({"deg": len(G.neighbors(i))}) for i in range(G.n)]
+
 
 def _color_node(
     G,
@@ -52,12 +58,14 @@ def _color_node(
     signature["neigh_color_multiset"] = sorted(prev_colors[j] for j in G.neighbors(i))
     return node_coloring(signature)
 
+
 def _gather_rel_vectors(G, i: int, hop_sets: List[Set[int]]) -> torch.Tensor:
     """
     Gets relative vectors to current node i.
     """
     idx = torch.tensor(sorted(hop_sets[i]), dtype=torch.long, device=G.X.device)
     return G.X.index_select(0, idx) - G.X[i].unsqueeze(0)
+
 
 def init_hop_sets(G, num_iters: int, igwl: bool) -> Tuple[List[Set[int]], int]:
     """
@@ -70,6 +78,7 @@ def init_hop_sets(G, num_iters: int, igwl: bool) -> Tuple[List[Set[int]], int]:
         hop_sets = [set() for _ in range(G.n)]
         T = num_iters
     return hop_sets, T
+
 
 def update_colors_once(
     G,
@@ -90,6 +99,7 @@ def update_colors_once(
         new_colors.append(color_i)
     return new_colors
 
+
 def expand_hop_sets_once(G, hop_sets: List[Set[int]]) -> List[Set[int]]:
     """
     only called in GWL not IGWL.
@@ -104,6 +114,7 @@ def expand_hop_sets_once(G, hop_sets: List[Set[int]]) -> List[Set[int]]:
         S.discard(i)
         new_hop_sets.append(S)
     return new_hop_sets
+
 
 if __name__ == "__main__":
     some_tensor = torch.randn(2, 3)
