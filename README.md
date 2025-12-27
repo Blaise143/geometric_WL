@@ -14,7 +14,7 @@ The graphs are shown below:
 </table>
 
 These graphs show the difference between the two tests pretty well since:
-- Their 1-hop local neighborhods are similar up to a rotation.
+- Their 1-hop local neighborhoods are similar up to a rotation.
 - Each node has the same local invariances (angles and distances/vectors)
 - They are globally different. 
 
@@ -28,10 +28,12 @@ To run the project, please do the following:
 - run the `main.py` file and check the printed outputs. They will tell you which test was able to distinguish the two graphs
   - SPOILER ALERT: GWL was able to distinguish, IGWL was not.
 
-You can also play around with other graphs by modifying `XA`, `XB` and `edges` in the main.py file 
+You can also play around with other graphs by modifying `XA`, `XB` and `edges` in the ```main.py``` file 
 
 Depending on the complexity of the graph you will use once you modify, you might need more than 2 iterations.
 
 If I get time, I will make the itirations automatically terminate when no node color has changed after an itiration instead of setting the number of itirations. For now, `num_iter <= number of nodes -1`.  
-
+*** 
 **Merci Beacoup!**
+***
+
